@@ -137,3 +137,20 @@ fn complement_inverts_coverage() {
     let within = spec.complement_within(PortRange::new(1, 20).unwrap());
     assert_eq!(within, "11-20".parse().unwrap());
 }
+
+#[test]
+fn from_ports_merges_adjacent() {
+    let spec = PortSpec::from_ports([80, 81, 82, 443, 22]);
+    assert_eq!(spec, "22,80-82,443".parse().unwrap());
+
+    // FromIterator over ranges and ports.
+    let from_ranges: PortSpec = [
+        "1-10".parse::<PortRange>().unwrap(),
+        "5-15".parse::<PortRange>().unwrap(),
+    ]
+    .into_iter()
+    .collect();
+    assert_eq!(from_ranges, "1-15".parse().unwrap());
+    let from_u16: PortSpec = (1u16..=3).collect();
+    assert_eq!(from_u16, "1-3".parse().unwrap());
+}

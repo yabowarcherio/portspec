@@ -33,6 +33,12 @@ impl PortSpec {
         spec
     }
 
+    /// Build a normalized spec from individual port numbers. Adjacent ports are
+    /// merged into ranges, so `from_ports([80, 81, 82])` becomes `80-82`.
+    pub fn from_ports<I: IntoIterator<Item = u16>>(ports: I) -> Self {
+        ports.into_iter().collect()
+    }
+
     /// Sort the ranges by start and merge every pair that overlaps or touches.
     fn normalize(&mut self) {
         if self.ranges.len() < 2 {
@@ -222,5 +228,17 @@ impl FromStr for PortSpec {
 impl From<PortRange> for PortSpec {
     fn from(r: PortRange) -> Self {
         PortSpec { ranges: vec![r] }
+    }
+}
+
+impl FromIterator<PortRange> for PortSpec {
+    fn from_iter<I: IntoIterator<Item = PortRange>>(iter: I) -> Self {
+        PortSpec::from_ranges(iter)
+    }
+}
+
+impl FromIterator<u16> for PortSpec {
+    fn from_iter<I: IntoIterator<Item = u16>>(iter: I) -> Self {
+        PortSpec::from_ranges(iter.into_iter().map(PortRange::single))
     }
 }
