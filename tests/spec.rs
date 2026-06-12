@@ -96,3 +96,17 @@ fn difference_across_max_port() {
     let b: PortSpec = "65535".parse().unwrap();
     assert_eq!(a.difference(&b), "65530-65534".parse().unwrap());
 }
+
+#[test]
+fn overlaps_subset_contains() {
+    let big: PortSpec = "1-1000".parse().unwrap();
+    let small: PortSpec = "100-200".parse().unwrap();
+    let partial: PortSpec = "900-1100".parse().unwrap();
+    let disjoint: PortSpec = "2000-3000".parse().unwrap();
+
+    assert!(big.overlaps(&small) && big.overlaps(&partial));
+    assert!(!big.overlaps(&disjoint));
+    assert!(small.is_subset_of(&big) && big.contains_spec(&small));
+    assert!(!partial.is_subset_of(&big));
+    assert!(big.is_subset_of(&big));
+}

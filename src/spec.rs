@@ -90,6 +90,23 @@ impl PortSpec {
         self.ranges.iter().flat_map(|r| r.iter())
     }
 
+    /// Returns `true` if the two specs share at least one port.
+    pub fn overlaps(&self, other: &PortSpec) -> bool {
+        self.ranges
+            .iter()
+            .any(|a| other.ranges.iter().any(|b| a.overlaps(b)))
+    }
+
+    /// Returns `true` if every port in `self` is also in `other`.
+    pub fn is_subset_of(&self, other: &PortSpec) -> bool {
+        self.difference(other).is_empty()
+    }
+
+    /// Returns `true` if every port in `other` is also in `self`.
+    pub fn contains_spec(&self, other: &PortSpec) -> bool {
+        other.is_subset_of(self)
+    }
+
     /// The union of two specs: every port in either.
     pub fn union(&self, other: &PortSpec) -> PortSpec {
         let mut ranges = self.ranges.clone();
