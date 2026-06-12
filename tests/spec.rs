@@ -110,3 +110,16 @@ fn overlaps_subset_contains() {
     assert!(!partial.is_subset_of(&big));
     assert!(big.is_subset_of(&big));
 }
+
+#[test]
+fn insert_and_remove() {
+    let mut spec: PortSpec = "1-10".parse().unwrap();
+    spec.insert(PortRange::new(11, 20).unwrap());
+    assert_eq!(spec, "1-20".parse().unwrap()); // merged
+
+    spec.insert(PortRange::single(100));
+    assert_eq!(spec.count(), 21);
+
+    spec.remove(PortRange::new(5, 15).unwrap());
+    assert_eq!(spec, "1-4,16-20,100".parse().unwrap());
+}

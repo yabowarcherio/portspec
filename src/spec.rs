@@ -57,6 +57,17 @@ impl PortSpec {
         &self.ranges
     }
 
+    /// Add a range to the spec, re-normalizing so the invariant holds.
+    pub fn insert(&mut self, range: PortRange) {
+        self.ranges.push(range);
+        self.normalize();
+    }
+
+    /// Remove every port in `range` from the spec.
+    pub fn remove(&mut self, range: PortRange) {
+        *self = self.difference(&PortSpec::from(range));
+    }
+
     /// `true` if the spec covers no ports.
     pub fn is_empty(&self) -> bool {
         self.ranges.is_empty()
