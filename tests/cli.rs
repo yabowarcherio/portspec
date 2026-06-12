@@ -81,3 +81,23 @@ fn bad_spec_exits_two() {
     let out = bin().arg("99999").output().unwrap();
     assert_eq!(out.status.code(), Some(2));
 }
+
+#[test]
+fn difference_flag() {
+    let out = bin()
+        .args(["--ranges", "--difference", "20-30", "1-100"])
+        .output()
+        .unwrap();
+    let s = String::from_utf8(out.stdout).unwrap();
+    assert_eq!(s.trim(), "1-19,31-100");
+}
+
+#[test]
+fn invert_flag() {
+    let out = bin()
+        .args(["--ranges", "--invert", "1-65535"])
+        .output()
+        .unwrap();
+    let s = String::from_utf8(out.stdout).unwrap();
+    assert_eq!(s.trim(), "0");
+}

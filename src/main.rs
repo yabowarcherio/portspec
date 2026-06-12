@@ -42,6 +42,14 @@ struct Cli {
     #[arg(long, value_name = "SPEC")]
     intersect: Option<String>,
 
+    /// Remove the ports in this spec from the result (difference).
+    #[arg(long, value_name = "SPEC")]
+    difference: Option<String>,
+
+    /// Invert the result over the whole port space (0-65535).
+    #[arg(long)]
+    invert: bool,
+
     /// Test whether a port is covered; exit 0 if so, 1 otherwise.
     #[arg(long, value_name = "PORT")]
     contains: Option<u16>,
@@ -105,6 +113,20 @@ fn main() -> ExitCode {
                 return ExitCode::from(2);
             }
         }
+    }
+
+    if let Some(other) = &cli.difference {
+        match PortSpec::from_str(other) {
+            Ok(spec) => combined = combined.difference(&spec),
+            Err(e) => {
+                eprintln!("portspec: {other:?}: {e}");
+                return ExitCode::from(2);
+            }
+        }
+    }
+
+    if cli.invert {
+        combined = combined.complement();
     }
 
     let stdout = io::stdout();
