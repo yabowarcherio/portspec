@@ -13,15 +13,21 @@ Initial release.
 ### Added
 
 - `PortRange`: an inclusive range of port numbers with parsing (`N`, `N-M`,
-  `N-`, `-M`, `-`), `contains`, `overlaps`, `contains_range`, `merge`, counts,
-  and double-ended iteration.
-- `PortSpec`: a normalized (sorted, merged, deduped) set of ranges parsed from a
-  comma-separated spec, with `contains` (binary search), `count`, `iter`,
-  `union`, and `intersection`.
+  `N-`, `-M`, `-`), `contains`, `overlaps`, `contains_range`, `intersection`,
+  `merge`, counts, and double-ended iteration. IANA `WELL_KNOWN` / `REGISTERED`
+  / `DYNAMIC` / `FULL` constants.
+- `PortSpec`: a normalized (sorted, merged, deduped) set of ranges with
+  `contains` (binary search), `count`, `iter`, `insert`, `remove`, `union`,
+  `intersection`, `difference`, `complement` / `complement_within`, and the
+  `overlaps` / `is_subset_of` / `contains_spec` predicates.
+- Conversions: `from_ports`, `FromIterator<PortRange>` / `FromIterator<u16>`,
+  and an owning `IntoIterator` (`PortSpecIter`).
 - `ParseError` covering empty, malformed, bad-port, and start-after-end inputs.
-- `portspec` CLI: expand to ports, `--count`, `--ranges`, `--intersect`,
-  `--contains`, `--limit`, `--reverse`, and stdin input via `-`.
+- `portspec` CLI: expand to ports, `--count`, `--ranges`, `--json`,
+  `--intersect`, `--difference`, `--invert`, `--contains`, `--limit`,
+  `--reverse`, and stdin input via `-`.
 - Optional `serde` feature deriving `Serialize`/`Deserialize`.
+- Criterion benchmarks and `HashSet`-cross-checked property tests.
 
 [Unreleased]: https://github.com/yabowarcherio/portspec/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/yabowarcherio/portspec/releases/tag/v0.1.0

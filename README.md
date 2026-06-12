@@ -84,9 +84,26 @@ assert_eq!(a.union(&b).to_string(), "1-30");
 assert_eq!(a.intersection(&b).to_string(), "15-20");
 ```
 
+More set algebra and conversions:
+
+```rust
+use portspec::{PortRange, PortSpec};
+
+let spec: PortSpec = "1-100".parse().unwrap();
+
+// Difference, complement, and predicates.
+assert_eq!(spec.difference(&"20-30".parse().unwrap()).to_string(), "1-19,31-100");
+assert!(spec.is_subset_of(&"1-200".parse().unwrap()));
+assert!(spec.complement().contains(0) && !spec.complement().contains(50));
+
+// Build from individual ports (adjacent ones merge) and the IANA ranges.
+assert_eq!(PortSpec::from_ports([80, 81, 82]).to_string(), "80-82");
+assert_eq!(PortRange::WELL_KNOWN.to_string(), "0-1023");
+```
+
 The `PortRange` type exposes the single-range surface (parsing, `contains`,
-`overlaps`, `merge`, double-ended iteration). Enable the `serde` feature to
-derive `Serialize`/`Deserialize` on both types.
+`overlaps`, `intersection`, `merge`, double-ended iteration). Enable the `serde`
+feature to derive `Serialize`/`Deserialize` on both types.
 
 ## Design notes
 
