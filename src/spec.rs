@@ -125,6 +125,18 @@ impl PortSpec {
         PortSpec::from_ranges(ranges)
     }
 
+    /// The complement of the spec over the whole port space (`0..=65535`) —
+    /// every port *not* covered.
+    pub fn complement(&self) -> PortSpec {
+        self.complement_within(PortRange::FULL)
+    }
+
+    /// The complement of the spec restricted to `bound` — the ports of `bound`
+    /// that the spec does not cover.
+    pub fn complement_within(&self, bound: PortRange) -> PortSpec {
+        PortSpec::from(bound).difference(self)
+    }
+
     /// The difference of two specs: ports in `self` that are not in `other`.
     pub fn difference(&self, other: &PortSpec) -> PortSpec {
         let mut out = Vec::new();

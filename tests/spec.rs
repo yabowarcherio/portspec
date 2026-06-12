@@ -123,3 +123,17 @@ fn insert_and_remove() {
     spec.remove(PortRange::new(5, 15).unwrap());
     assert_eq!(spec, "1-4,16-20,100".parse().unwrap());
 }
+
+#[test]
+fn complement_inverts_coverage() {
+    let spec: PortSpec = "1-10,100".parse().unwrap();
+    let comp = spec.complement();
+    // Complement covers everything else.
+    assert!(!comp.contains(5) && !comp.contains(100));
+    assert!(comp.contains(0) && comp.contains(11) && comp.contains(65535));
+    assert_eq!(spec.count() + comp.count(), 65536);
+
+    // Bounded complement stays within the bound.
+    let within = spec.complement_within(PortRange::new(1, 20).unwrap());
+    assert_eq!(within, "11-20".parse().unwrap());
+}
