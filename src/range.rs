@@ -96,6 +96,18 @@ impl PortRange {
         (hi.start as u32) <= (lo.end as u32) + 1
     }
 
+    /// The overlapping portion of two ranges, or `None` if they are disjoint.
+    pub fn intersection(&self, other: &PortRange) -> Option<PortRange> {
+        if self.overlaps(other) {
+            Some(PortRange {
+                start: self.start.max(other.start),
+                end: self.end.min(other.end),
+            })
+        } else {
+            None
+        }
+    }
+
     /// Merge two touching or overlapping ranges into one, or `None` if they are
     /// disjoint with a gap between them.
     pub fn merge(&self, other: &PortRange) -> Option<PortRange> {

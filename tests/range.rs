@@ -80,3 +80,14 @@ fn display_round_trips() {
         assert_eq!(r.to_string(), s);
     }
 }
+
+#[test]
+fn intersection_of_ranges() {
+    let a: PortRange = "1-100".parse().unwrap();
+    let b: PortRange = "50-150".parse().unwrap();
+    let d: PortRange = "200-300".parse().unwrap();
+    assert_eq!(a.intersection(&b), Some(PortRange::new(50, 100).unwrap()));
+    assert_eq!(a.intersection(&d), None);
+    // Intersection with self is self.
+    assert_eq!(a.intersection(&a), Some(a));
+}
