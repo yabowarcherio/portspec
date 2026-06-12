@@ -38,6 +38,10 @@ struct Cli {
     #[arg(short, long, conflicts_with_all = ["count", "contains"])]
     ranges: bool,
 
+    /// Emit a JSON summary (spec, count, ranges) instead of listing.
+    #[arg(long, conflicts_with_all = ["count", "ranges", "contains"])]
+    json: bool,
+
     /// Keep only ports also present in this spec (intersection).
     #[arg(long, value_name = "SPEC")]
     intersect: Option<String>,
@@ -147,6 +151,21 @@ fn main() -> ExitCode {
 
     if cli.ranges {
         let _ = writeln!(out, "{combined}");
+        return ExitCode::SUCCESS;
+    }
+
+    if cli.json {
+        let pairs: Vec<[u16; 2]> = combined
+            .ranges()
+            .iter()
+            .map(|r| [r.start(), r.end()])
+            .collect();
+        let value = serde_json::json!({
+            "spec": combined.to_string(),
+            "count": combined.count(),
+            "ranges": pairs,
+        });
+        let _ = writeln!(out, "{}", serde_json::to_string_pretty(&value).unwrap());
         return ExitCode::SUCCESS;
     }
 

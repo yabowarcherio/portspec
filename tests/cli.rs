@@ -101,3 +101,15 @@ fn invert_flag() {
     let s = String::from_utf8(out.stdout).unwrap();
     assert_eq!(s.trim(), "0");
 }
+
+#[test]
+fn json_flag_emits_summary() {
+    let out = bin().args(["--json", "80,1-10,11-20"]).output().unwrap();
+    assert!(out.status.success());
+    let s = String::from_utf8(out.stdout).unwrap();
+    let v: serde_json::Value = serde_json::from_str(&s).unwrap();
+    assert_eq!(v["spec"], "1-20,80");
+    assert_eq!(v["count"], 21);
+    assert_eq!(v["ranges"][0][0], 1);
+    assert_eq!(v["ranges"][0][1], 20);
+}
