@@ -6,13 +6,13 @@
 //! sockets, no DNS, no embedded data.
 //!
 //! ```
-//! use portspec::PortRange;
+//! use portspec::PortSpec;
 //!
-//! let r: PortRange = "8000-8002".parse().unwrap();
-//! assert_eq!(r.count(), 3);
-//! assert!(r.contains(8001));
-//! let ports: Vec<u16> = r.iter().collect();
-//! assert_eq!(ports, [8000, 8001, 8002]);
+//! let spec: PortSpec = "22,80,443,8000-8002".parse().unwrap();
+//! assert_eq!(spec.count(), 6);
+//! assert!(spec.contains(8001));
+//! let ports: Vec<u16> = spec.iter().collect();
+//! assert_eq!(ports, [22, 80, 443, 8000, 8001, 8002]);
 //! ```
 //!
 //! ## Features
@@ -27,6 +27,8 @@
 
 mod error;
 mod range;
+mod spec;
 
 pub use error::ParseError;
 pub use range::{PortRange, PortRangeIter};
+pub use spec::PortSpec;
