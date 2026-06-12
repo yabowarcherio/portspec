@@ -44,6 +44,24 @@ impl PortRange {
         end: u16::MAX,
     };
 
+    /// The IANA *well-known* (system) port range, `0..=1023`.
+    pub const WELL_KNOWN: PortRange = PortRange {
+        start: 0,
+        end: 1023,
+    };
+
+    /// The IANA *registered* (user) port range, `1024..=49151`.
+    pub const REGISTERED: PortRange = PortRange {
+        start: 1024,
+        end: 49151,
+    };
+
+    /// The IANA *dynamic*/private/ephemeral port range, `49152..=65535`.
+    pub const DYNAMIC: PortRange = PortRange {
+        start: 49152,
+        end: 65535,
+    };
+
     /// The first (lowest) port in the range.
     #[inline]
     pub const fn start(&self) -> u16 {

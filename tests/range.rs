@@ -91,3 +91,17 @@ fn intersection_of_ranges() {
     // Intersection with self is self.
     assert_eq!(a.intersection(&a), Some(a));
 }
+
+#[test]
+fn iana_range_constants() {
+    assert_eq!(PortRange::WELL_KNOWN.count(), 1024);
+    assert_eq!(PortRange::REGISTERED.start(), 1024);
+    assert_eq!(PortRange::DYNAMIC.end(), 65535);
+    // The three partitions exactly tile the full space.
+    assert_eq!(
+        PortRange::WELL_KNOWN.count() + PortRange::REGISTERED.count() + PortRange::DYNAMIC.count(),
+        PortRange::FULL.count()
+    );
+    assert!(PortRange::WELL_KNOWN.contains(80));
+    assert!(PortRange::DYNAMIC.contains(50000));
+}
