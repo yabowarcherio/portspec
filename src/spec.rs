@@ -97,6 +97,33 @@ impl PortSpec {
         PortSpec::from_ranges(ranges)
     }
 
+    /// The difference of two specs: ports in `self` that are not in `other`.
+    pub fn difference(&self, other: &PortSpec) -> PortSpec {
+        let mut out = Vec::new();
+        for r in &self.ranges {
+            // `cur` walks across `r` in u32 so the `+1` past 65535 never wraps.
+            let mut cur = u32::from(r.start());
+            let end = u32::from(r.end());
+            for o in &other.ranges {
+                let (os, oe) = (u32::from(o.start()), u32::from(o.end()));
+                if oe < cur || os > end {
+                    continue;
+                }
+                if os > cur {
+                    out.push(PortRange::new(cur as u16, (os - 1) as u16).expect("cur < os"));
+                }
+                cur = cur.max(oe + 1);
+                if cur > end {
+                    break;
+                }
+            }
+            if cur <= end {
+                out.push(PortRange::new(cur as u16, end as u16).expect("cur <= end"));
+            }
+        }
+        PortSpec::from_ranges(out)
+    }
+
     /// The intersection of two specs: only ports present in both.
     pub fn intersection(&self, other: &PortSpec) -> PortSpec {
         let mut out = Vec::new();

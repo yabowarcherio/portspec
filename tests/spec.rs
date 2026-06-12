@@ -77,3 +77,22 @@ fn display_round_trips_normalized() {
     let spec: PortSpec = "443,1-10,11-20".parse().unwrap();
     assert_eq!(spec.to_string(), "1-20,443");
 }
+
+#[test]
+fn difference_subtracts_ports() {
+    let a: PortSpec = "1-100".parse().unwrap();
+    let b: PortSpec = "20-30,50".parse().unwrap();
+    assert_eq!(a.difference(&b), "1-19,31-49,51-100".parse().unwrap());
+
+    // Removing everything yields empty.
+    assert!(a.difference(&"1-100".parse().unwrap()).is_empty());
+    // Removing a disjoint spec is a no-op.
+    assert_eq!(a.difference(&"200-300".parse().unwrap()), a);
+}
+
+#[test]
+fn difference_across_max_port() {
+    let a: PortSpec = "65530-65535".parse().unwrap();
+    let b: PortSpec = "65535".parse().unwrap();
+    assert_eq!(a.difference(&b), "65530-65534".parse().unwrap());
+}
