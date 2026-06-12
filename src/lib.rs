@@ -31,4 +31,4 @@ mod spec;
 
 pub use error::ParseError;
 pub use range::{PortRange, PortRangeIter};
-pub use spec::PortSpec;
+pub use spec::{PortSpec, PortSpecIter};

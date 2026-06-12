@@ -154,3 +154,16 @@ fn from_ports_merges_adjacent() {
     let from_u16: PortSpec = (1u16..=3).collect();
     assert_eq!(from_u16, "1-3".parse().unwrap());
 }
+
+#[test]
+fn into_iter_yields_all_ports() {
+    let spec: PortSpec = "22,8000-8002".parse().unwrap();
+    let ports: Vec<u16> = spec.clone().into_iter().collect();
+    assert_eq!(ports, [22, 8000, 8001, 8002]);
+    // for-loop sugar over an owned spec.
+    let mut n = 0;
+    for _p in spec {
+        n += 1;
+    }
+    assert_eq!(n, 4);
+}

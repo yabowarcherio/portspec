@@ -242,3 +242,37 @@ impl FromIterator<u16> for PortSpec {
         PortSpec::from_ranges(iter.into_iter().map(PortRange::single))
     }
 }
+
+impl IntoIterator for PortSpec {
+    type Item = u16;
+    type IntoIter = PortSpecIter;
+    fn into_iter(self) -> PortSpecIter {
+        PortSpecIter {
+            ranges: self.ranges.into_iter(),
+            current: None,
+        }
+    }
+}
+
+/// Owning iterator over the ports of a [`PortSpec`], ascending. Yielded by
+/// [`PortSpec::into_iter`].
+#[derive(Debug, Clone)]
+pub struct PortSpecIter {
+    ranges: std::vec::IntoIter<PortRange>,
+    current: Option<crate::range::PortRangeIter>,
+}
+
+impl Iterator for PortSpecIter {
+    type Item = u16;
+
+    fn next(&mut self) -> Option<u16> {
+        loop {
+            if let Some(it) = &mut self.current {
+                if let Some(port) = it.next() {
+                    return Some(port);
+                }
+            }
+            self.current = Some(self.ranges.next()?.iter());
+        }
+    }
+}
