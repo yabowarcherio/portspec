@@ -203,7 +203,11 @@ impl fmt::Display for PortSpec {
 impl FromStr for PortSpec {
     type Err = ParseError;
 
-    /// Parse a comma-separated list of ports and ranges. Whitespace around items
+    /// Parse a comma-separated list of ports, ranges, and **service names** from
+    /// the built-in [`crate::SERVICES`] table.
+    ///
+    /// Service names are matched case-insensitively and substitute the
+    /// service's well-known port (e.g. `"ssh"` → `22`). Whitespace around items
     /// is ignored; empty items (e.g. a trailing comma) are skipped.
     fn from_str(s: &str) -> Result<Self, ParseError> {
         let s = s.trim();
@@ -214,6 +218,12 @@ impl FromStr for PortSpec {
         for item in s.split(',') {
             let item = item.trim();
             if item.is_empty() {
+                continue;
+            }
+            // Try service-name lookup first — these are tiny words that
+            // never overlap with port-number/range syntax (digits + '-').
+            if let Some(port) = crate::services::port_for(item) {
+                ranges.push(PortRange::single(port));
                 continue;
             }
             ranges.push(item.parse::<PortRange>()?);
