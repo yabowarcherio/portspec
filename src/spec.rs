@@ -133,6 +133,13 @@ impl PortSpec {
 
     /// The complement of the spec over the whole port space (`0..=65535`) —
     /// every port *not* covered.
+    /// Iterate every contained port together with its IANA service name from
+    /// the embedded [`crate::SERVICES`] table, or `None` when the port has no
+    /// match.
+    pub fn iter_named(&self) -> impl Iterator<Item = (u16, Option<&'static str>)> + '_ {
+        self.iter().map(|p| (p, crate::services::service_for(p)))
+    }
+
     pub fn complement(&self) -> PortSpec {
         self.complement_within(PortRange::FULL)
     }
