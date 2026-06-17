@@ -6,6 +6,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0]
+
+### Added
+
+- Built-in services table (`SERVICES`, `port_for`, `service_for`,
+  `SERVICES_COUNT`) — well-known TCP/UDP names like `ssh`, `http`, `https`,
+  `dns`, `ldap`, `postgres`, `rdp`, …
+- `PortSpec` parser accepts service names (`"ssh,http,8000-8002"`).
+- `PortSpec::iter_named` pairs each port with its service name (if any).
+
 ## [0.1.0]
 
 Initial release.
@@ -29,5 +39,6 @@ Initial release.
 - Optional `serde` feature deriving `Serialize`/`Deserialize`.
 - Criterion benchmarks and `HashSet`-cross-checked property tests.
 
-[Unreleased]: https://github.com/yabowarcherio/portspec/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/yabowarcherio/portspec/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/yabowarcherio/portspec/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/yabowarcherio/portspec/releases/tag/v0.1.0
