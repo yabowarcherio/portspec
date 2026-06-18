@@ -6,6 +6,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- `Proto` enum (`Tcp` / `Udp`) with `as_str()` / `letter()` accessors and
+  `FromStr` accepting `"tcp"`/`"udp"`/`"t"`/`"u"` plus case variants. Lets
+  callers tag specs with their transport instead of carrying the protocol
+  out-of-band.
+
 ## [0.2.0]
 
 ### Added
