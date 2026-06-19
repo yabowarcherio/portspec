@@ -12,6 +12,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `FromStr` accepting `"tcp"`/`"udp"`/`"t"`/`"u"` plus case variants. Lets
   callers tag specs with their transport instead of carrying the protocol
   out-of-band.
+- `TaggedSpec` parses nmap-style spec strings (`T:22,80,U:53,123`), splitting
+  ports across two independent `PortSpec`s. The default proto is TCP, and
+  `T:`/`U:` prefixes switch which proto subsequent comma-separated entries
+  apply to. Round-trips through `Display`/`FromStr`.
 
 ## [0.2.0]
 
