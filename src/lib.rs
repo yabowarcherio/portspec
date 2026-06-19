@@ -30,9 +30,11 @@ mod proto;
 mod range;
 mod services;
 mod spec;
+mod tagged;
 
 pub use error::ParseError;
 pub use proto::Proto;
 pub use range::{PortRange, PortRangeIter};
 pub use services::{port_for, service_for, Service, SERVICES, SERVICES_COUNT};
 pub use spec::{PortSpec, PortSpecIter};
+pub use tagged::TaggedSpec;
