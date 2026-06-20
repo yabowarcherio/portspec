@@ -26,6 +26,7 @@
 #![warn(missing_docs)]
 
 mod error;
+mod presets;
 mod proto;
 mod range;
 mod services;
@@ -33,6 +34,7 @@ mod spec;
 mod tagged;
 
 pub use error::ParseError;
+pub use presets::{top_100_tcp, top_1000_tcp, TOP_100_TCP_LIST, TOP_1000_TCP_LIST};
 pub use proto::Proto;
 pub use range::{PortRange, PortRangeIter};
 pub use services::{port_for, service_for, Service, SERVICES, SERVICES_COUNT};
