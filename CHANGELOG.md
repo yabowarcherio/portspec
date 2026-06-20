@@ -16,6 +16,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   ports across two independent `PortSpec`s. The default proto is TCP, and
   `T:`/`U:` prefixes switch which proto subsequent comma-separated entries
   apply to. Round-trips through `Display`/`FromStr`.
+- Curated `top_100_tcp()` and `top_1000_tcp()` preset specs plus the raw
+  `TOP_100_TCP_LIST` / `TOP_1000_TCP_LIST` text constants for callers who
+  want to echo the list without paying the parse cost.
 
 ## [0.2.0]
 
