@@ -107,6 +107,33 @@ impl PortSpec {
         self.ranges.iter().flat_map(|r| r.iter())
     }
 
+    /// The `index`th port in the spec, in ascending order; `nth_port(0)` is
+    /// the lowest. Returns `None` for any index `>=` [`count`](Self::count).
+    ///
+    /// O(R) over the number of ranges (typically tiny) — much cheaper than
+    /// pulling `iter().nth(index)` for sparse, range-heavy specs.
+    pub fn nth_port(&self, index: u32) -> Option<u16> {
+        let mut remaining = index;
+        for r in &self.ranges {
+            let len = (r.end() - r.start() + 1) as u32;
+            if remaining < len {
+                return Some(r.start() + remaining as u16);
+            }
+            remaining -= len;
+        }
+        None
+    }
+
+    /// The lowest port in the spec, or `None` if empty.
+    pub fn first(&self) -> Option<u16> {
+        self.ranges.first().map(|r| r.start())
+    }
+
+    /// The highest port in the spec, or `None` if empty.
+    pub fn last(&self) -> Option<u16> {
+        self.ranges.last().map(|r| r.end())
+    }
+
     /// Returns `true` if the two specs share at least one port.
     pub fn overlaps(&self, other: &PortSpec) -> bool {
         self.ranges
