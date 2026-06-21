@@ -167,6 +167,8 @@ impl PortSpec {
         self.iter().map(|p| (p, crate::services::service_for(p)))
     }
 
+    /// The complement of the spec over the full `0..=65535` range — every
+    /// port the spec does *not* cover.
     pub fn complement(&self) -> PortSpec {
         self.complement_within(PortRange::FULL)
     }
