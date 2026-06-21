@@ -3,6 +3,36 @@
 use portspec::{ParseError, PortRange, PortSpec};
 
 #[test]
+fn nth_port_matches_iterator() {
+    let spec: PortSpec = "22,80,443,8000-8002".parse().unwrap();
+    let want: Vec<u16> = spec.iter().collect();
+    for (i, &port) in want.iter().enumerate() {
+        assert_eq!(spec.nth_port(i as u32), Some(port), "idx {i}");
+    }
+    assert_eq!(spec.nth_port(want.len() as u32), None);
+}
+
+#[test]
+fn nth_port_on_empty_spec_is_none() {
+    let spec = PortSpec::new();
+    assert_eq!(spec.nth_port(0), None);
+}
+
+#[test]
+fn first_last_match_iter_extremes() {
+    let spec: PortSpec = "22,80,443,8000-8002".parse().unwrap();
+    assert_eq!(spec.first(), Some(22));
+    assert_eq!(spec.last(), Some(8002));
+}
+
+#[test]
+fn first_last_empty_is_none() {
+    let spec = PortSpec::new();
+    assert_eq!(spec.first(), None);
+    assert_eq!(spec.last(), None);
+}
+
+#[test]
 fn parses_and_normalizes() {
     let spec: PortSpec = "80,22,443".parse().unwrap();
     // Sorted on parse.
