@@ -19,6 +19,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Curated `top_100_tcp()` and `top_1000_tcp()` preset specs plus the raw
   `TOP_100_TCP_LIST` / `TOP_1000_TCP_LIST` text constants for callers who
   want to echo the list without paying the parse cost.
+- `PortSpec::nth_port(index)` returns the `index`th port in ascending order
+  without iterating to it. `first()` / `last()` expose the spec's extremes.
 
 ## [0.2.0]
 
