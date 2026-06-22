@@ -103,6 +103,50 @@ fn invert_flag() {
 }
 
 #[test]
+fn resolve_flag_appends_service_names() {
+    let out = bin().args(["--resolve", "22,80,443,9999"]).output().unwrap();
+    assert!(out.status.success());
+    let s = String::from_utf8(out.stdout).unwrap();
+    let lines: Vec<&str> = s.lines().collect();
+    assert_eq!(lines[0], "22\tssh");
+    assert_eq!(lines[1], "80\thttp");
+    assert_eq!(lines[2], "443\thttps");
+    // 9999 is not in the built-in table; the name column is empty (just TAB).
+    assert_eq!(lines[3], "9999\t");
+}
+
+#[test]
+fn preset_top_100_replaces_input() {
+    let out = bin().args(["--preset", "top-100", "--count"]).output().unwrap();
+    assert!(out.status.success());
+    let n: u32 = String::from_utf8(out.stdout).unwrap().trim().parse().unwrap();
+    assert!((90..=170).contains(&n), "preset top-100 count out of band: {n}");
+}
+
+#[test]
+fn preset_top_1000_is_larger_than_top_100() {
+    let small = bin()
+        .args(["--preset", "top-100", "--count"])
+        .output()
+        .unwrap();
+    let big = bin()
+        .args(["--preset", "top-1000", "--count"])
+        .output()
+        .unwrap();
+    let s: u32 = String::from_utf8(small.stdout).unwrap().trim().parse().unwrap();
+    let b: u32 = String::from_utf8(big.stdout).unwrap().trim().parse().unwrap();
+    assert!(b > s);
+}
+
+#[test]
+fn preset_unknown_exits_two() {
+    let out = bin().args(["--preset", "nope"]).output().unwrap();
+    assert_eq!(out.status.code(), Some(2));
+    let err = String::from_utf8(out.stderr).unwrap();
+    assert!(err.contains("unknown preset"), "stderr: {err}");
+}
+
+#[test]
 fn json_flag_emits_summary() {
     let out = bin().args(["--json", "80,1-10,11-20"]).output().unwrap();
     assert!(out.status.success());
