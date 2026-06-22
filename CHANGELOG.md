@@ -21,6 +21,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   want to echo the list without paying the parse cost.
 - `PortSpec::nth_port(index)` returns the `index`th port in ascending order
   without iterating to it. `first()` / `last()` expose the spec's extremes.
+- CLI `--resolve` appends each port's service name from the built-in table
+  (empty when unknown) in default listing mode.
+- CLI `--preset top-100` / `--preset top-1000` replaces input specs with a
+  curated preset; combines with `--intersect`/`--difference`/`--invert`.
 
 ## [0.2.0]
 
