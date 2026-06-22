@@ -27,7 +27,7 @@ use portspec::PortSpec;
 )]
 struct Cli {
     /// Port specs to combine. Use `-` to read from stdin.
-    #[arg(value_name = "SPEC", required = true)]
+    #[arg(value_name = "SPEC", required_unless_present = "preset")]
     specs: Vec<String>,
 
     /// Print the number of ports instead of listing them.
@@ -65,6 +65,16 @@ struct Cli {
     /// List ports from highest to lowest.
     #[arg(short = 'R', long)]
     reverse: bool,
+
+    /// In default listing mode, also print the service name for each port
+    /// from the built-in table (empty string when unknown), as `PORT<TAB>NAME`.
+    #[arg(long, conflicts_with_all = ["count", "ranges", "json", "contains"])]
+    resolve: bool,
+
+    /// Replace the input specs with a curated preset: `top-100` or `top-1000`
+    /// (both TCP). Combines with --intersect/--difference/--invert as usual.
+    #[arg(long, value_name = "NAME", conflicts_with = "specs")]
+    preset: Option<String>,
 }
 
 /// Expand the spec list, replacing a `-` with lines read from stdin.
@@ -97,14 +107,25 @@ fn main() -> ExitCode {
         }
     };
 
-    // Parse and union every spec into one.
+    // Parse and union every spec into one. --preset replaces the input list.
     let mut combined = PortSpec::new();
-    for s in &specs {
-        match PortSpec::from_str(s) {
-            Ok(spec) => combined = combined.union(&spec),
-            Err(e) => {
-                eprintln!("portspec: {s:?}: {e}");
+    if let Some(name) = &cli.preset {
+        combined = match name.as_str() {
+            "top-100" | "top100" => portspec::top_100_tcp(),
+            "top-1000" | "top1000" => portspec::top_1000_tcp(),
+            other => {
+                eprintln!("portspec: unknown preset {other:?} (try top-100 / top-1000)");
                 return ExitCode::from(2);
+            }
+        };
+    } else {
+        for s in &specs {
+            match PortSpec::from_str(s) {
+                Ok(spec) => combined = combined.union(&spec),
+                Err(e) => {
+                    eprintln!("portspec: {s:?}: {e}");
+                    return ExitCode::from(2);
+                }
             }
         }
     }
@@ -169,7 +190,8 @@ fn main() -> ExitCode {
         return ExitCode::SUCCESS;
     }
 
-    // Default: list ports, one per line.
+    // Default: list ports, one per line. With --resolve, append the service
+    // name from the built-in table separated by a TAB.
     let iter: Box<dyn Iterator<Item = u16>> = if cli.reverse {
         Box::new(combined.iter().collect::<Vec<_>>().into_iter().rev())
     } else {
@@ -179,7 +201,13 @@ fn main() -> ExitCode {
         if cli.limit != 0 && printed as u64 >= cli.limit {
             break;
         }
-        if writeln!(out, "{port}").is_err() {
+        let line_res = if cli.resolve {
+            let name = portspec::service_for(port).unwrap_or("");
+            writeln!(out, "{port}\t{name}")
+        } else {
+            writeln!(out, "{port}")
+        };
+        if line_res.is_err() {
             // Broken pipe (e.g. piped into `head`): stop quietly.
             return ExitCode::SUCCESS;
         }
