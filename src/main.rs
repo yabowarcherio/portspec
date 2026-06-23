@@ -75,6 +75,13 @@ struct Cli {
     /// (both TCP). Combines with --intersect/--difference/--invert as usual.
     #[arg(long, value_name = "NAME", conflicts_with = "specs")]
     preset: Option<String>,
+
+    /// Interpret the input as an nmap-style T:/U: spec and emit
+    /// `tcp PORT` / `udp PORT` lines (one per port, ascending). Conflicts
+    /// with most other flags; useful for piping into per-proto downstream
+    /// tools.
+    #[arg(long)]
+    tagged: bool,
 }
 
 /// Expand the spec list, replacing a `-` with lines read from stdin.
@@ -106,6 +113,38 @@ fn main() -> ExitCode {
             return ExitCode::from(2);
         }
     };
+
+    if cli.tagged {
+        // Tagged mode: combine all input specs via TaggedSpec union, then
+        // emit one `tcp PORT` / `udp PORT` line per port.
+        let mut tcp = PortSpec::new();
+        let mut udp = PortSpec::new();
+        for s in &specs {
+            match portspec::TaggedSpec::from_str(s) {
+                Ok(t) => {
+                    tcp = tcp.union(&t.tcp);
+                    udp = udp.union(&t.udp);
+                }
+                Err(e) => {
+                    eprintln!("portspec: {s:?}: {e}");
+                    return ExitCode::from(2);
+                }
+            }
+        }
+        let stdout = io::stdout();
+        let mut out = stdout.lock();
+        for p in tcp.iter() {
+            if writeln!(out, "tcp {p}").is_err() {
+                return ExitCode::SUCCESS;
+            }
+        }
+        for p in udp.iter() {
+            if writeln!(out, "udp {p}").is_err() {
+                return ExitCode::SUCCESS;
+            }
+        }
+        return ExitCode::SUCCESS;
+    }
 
     // Parse and union every spec into one. --preset replaces the input list.
     let mut combined = PortSpec::new();
