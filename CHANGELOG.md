@@ -25,6 +25,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   (empty when unknown) in default listing mode.
 - CLI `--preset top-100` / `--preset top-1000` replaces input specs with a
   curated preset; combines with `--intersect`/`--difference`/`--invert`.
+- CLI `--tagged` interprets the input spec as an nmap-style `T:80,U:53`
+  string and emits `tcp PORT` / `udp PORT` lines (one per port, ascending).
 
 ## [0.2.0]
 
