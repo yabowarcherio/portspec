@@ -103,6 +103,29 @@ fn invert_flag() {
 }
 
 #[test]
+fn tagged_flag_emits_proto_prefixed_lines() {
+    let out = bin().args(["--tagged", "T:22,80,U:53,123"]).output().unwrap();
+    assert!(out.status.success());
+    let s = String::from_utf8(out.stdout).unwrap();
+    let lines: Vec<&str> = s.lines().collect();
+    assert_eq!(lines, ["tcp 22", "tcp 80", "udp 53", "udp 123"]);
+}
+
+#[test]
+fn tagged_flag_default_proto_is_tcp() {
+    let out = bin().args(["--tagged", "22,80,U:53"]).output().unwrap();
+    let s = String::from_utf8(out.stdout).unwrap();
+    let lines: Vec<&str> = s.lines().collect();
+    assert_eq!(lines, ["tcp 22", "tcp 80", "udp 53"]);
+}
+
+#[test]
+fn tagged_flag_bad_spec_exits_two() {
+    let out = bin().args(["--tagged", "T:notaport"]).output().unwrap();
+    assert_eq!(out.status.code(), Some(2));
+}
+
+#[test]
 fn resolve_flag_appends_service_names() {
     let out = bin().args(["--resolve", "22,80,443,9999"]).output().unwrap();
     assert!(out.status.success());
