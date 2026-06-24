@@ -84,6 +84,19 @@ pub fn service_for(port: u16) -> Option<&'static str> {
     SERVICES.iter().find(|s| s.port == port).map(|s| s.name)
 }
 
+/// Every name registered to `port` in the built-in table. Returns an empty
+/// iterator when the port has no matching service.
+///
+/// Several entries can share a port (e.g. `submission` and `smtps` could
+/// both live on different ports but a single port could host multiple
+/// labelled services). This iterator yields every match.
+pub fn services_for(port: u16) -> impl Iterator<Item = &'static str> {
+    SERVICES
+        .iter()
+        .filter(move |s| s.port == port)
+        .map(|s| s.name)
+}
+
 /// The number of services in the embedded table.
 pub const SERVICES_COUNT: usize = SERVICES.len();
 
