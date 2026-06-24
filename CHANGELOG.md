@@ -27,6 +27,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   curated preset; combines with `--intersect`/`--difference`/`--invert`.
 - CLI `--tagged` interprets the input spec as an nmap-style `T:80,U:53`
   string and emits `tcp PORT` / `udp PORT` lines (one per port, ascending).
+- Expanded the built-in services table to 49 entries (added databases,
+  queues, infra: cassandra, couchdb, elasticsearch, etcd, grpc, kafka,
+  memcached, mongodb, mqtt, nats, prometheus, zookeeper, bgp, irc, git,
+  amqp).
+- `services_for(port)` iterates every name registered to a port, for callers
+  who want all aliases rather than the first alphabetical match.
 
 ## [0.2.0]
 
