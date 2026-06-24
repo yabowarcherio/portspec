@@ -3,6 +3,25 @@
 use portspec::{ParseError, PortRange, PortSpec};
 
 #[test]
+fn services_for_known_port_yields_at_least_one() {
+    use portspec::services_for;
+    let names: Vec<_> = services_for(443).collect();
+    assert!(names.contains(&"https"));
+}
+
+#[test]
+fn services_for_unknown_port_is_empty() {
+    use portspec::services_for;
+    assert_eq!(services_for(56789).count(), 0);
+}
+
+#[test]
+fn services_table_count_constant_matches_table_len() {
+    use portspec::{SERVICES, SERVICES_COUNT};
+    assert_eq!(SERVICES.len(), SERVICES_COUNT);
+}
+
+#[test]
 fn nth_port_matches_iterator() {
     let spec: PortSpec = "22,80,443,8000-8002".parse().unwrap();
     let want: Vec<u16> = spec.iter().collect();
