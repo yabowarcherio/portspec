@@ -57,6 +57,34 @@ impl TaggedSpec {
     pub fn contains(&self, proto: Proto, port: u16) -> bool {
         self.for_proto(proto).contains(port)
     }
+
+    /// Union of two tagged specs — per-protocol union of the underlying
+    /// `PortSpec`s.
+    pub fn union(&self, other: &TaggedSpec) -> TaggedSpec {
+        TaggedSpec {
+            tcp: self.tcp.union(&other.tcp),
+            udp: self.udp.union(&other.udp),
+        }
+    }
+
+    /// Intersection of two tagged specs — per-protocol intersection. A port
+    /// that's TCP-only in one spec and UDP-only in the other does not appear
+    /// in the result.
+    pub fn intersection(&self, other: &TaggedSpec) -> TaggedSpec {
+        TaggedSpec {
+            tcp: self.tcp.intersection(&other.tcp),
+            udp: self.udp.intersection(&other.udp),
+        }
+    }
+
+    /// Difference of two tagged specs — per-protocol difference. Removes
+    /// from this spec any ports also present in `other` on the same proto.
+    pub fn difference(&self, other: &TaggedSpec) -> TaggedSpec {
+        TaggedSpec {
+            tcp: self.tcp.difference(&other.tcp),
+            udp: self.udp.difference(&other.udp),
+        }
+    }
 }
 
 impl FromStr for TaggedSpec {
