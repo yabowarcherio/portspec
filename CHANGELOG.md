@@ -33,6 +33,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   amqp).
 - `services_for(port)` iterates every name registered to a port, for callers
   who want all aliases rather than the first alphabetical match.
+- `TaggedSpec::union` / `intersection` / `difference` — per-protocol set
+  algebra. A port that's TCP-only in one operand and UDP-only in the other
+  never crosses transports.
 
 ## [0.2.0]
 
