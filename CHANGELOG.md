@@ -36,6 +36,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `TaggedSpec::union` / `intersection` / `difference` — per-protocol set
   algebra. A port that's TCP-only in one operand and UDP-only in the other
   never crosses transports.
+- `preset(name)` looks up a curated preset by case-insensitive name
+  (`"top-100"`, `"top100"`, `"top-1000"`, `"top1000"`).
 
 ## [0.2.0]
 
