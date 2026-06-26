@@ -149,14 +149,15 @@ fn main() -> ExitCode {
     // Parse and union every spec into one. --preset replaces the input list.
     let mut combined = PortSpec::new();
     if let Some(name) = &cli.preset {
-        combined = match name.as_str() {
-            "top-100" | "top100" => portspec::top_100_tcp(),
-            "top-1000" | "top1000" => portspec::top_1000_tcp(),
-            other => {
-                eprintln!("portspec: unknown preset {other:?} (try top-100 / top-1000)");
+        match portspec::preset(name) {
+            Ok(spec) => combined = spec,
+            Err(_) => {
+                eprintln!(
+                    "portspec: unknown preset {name:?} (try top-100 / top-1000)"
+                );
                 return ExitCode::from(2);
             }
-        };
+        }
     } else {
         for s in &specs {
             match PortSpec::from_str(s) {

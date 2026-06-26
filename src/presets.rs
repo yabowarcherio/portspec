@@ -5,7 +5,19 @@
 //! top-N lists, but they're independent: nmap's exact ordering changes from
 //! release to release, while these stay stable across versions.
 
+use crate::error::ParseError;
 use crate::spec::PortSpec;
+
+/// Look up a preset spec by name. Accepts `"top-100"` / `"top100"` /
+/// `"top-1000"` / `"top1000"` (case-insensitive). Returns
+/// [`ParseError::Malformed`] for any other input.
+pub fn preset(name: &str) -> Result<PortSpec, ParseError> {
+    match name.trim().to_ascii_lowercase().as_str() {
+        "top-100" | "top100" => Ok(top_100_tcp()),
+        "top-1000" | "top1000" => Ok(top_1000_tcp()),
+        other => Err(ParseError::Malformed(other.to_string())),
+    }
+}
 
 /// Compact "top-100 TCP" preset — the ports most commonly worth a quick
 /// `connect()` sweep on a fresh subnet. Returned as a normalized
