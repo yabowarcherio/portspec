@@ -105,6 +105,42 @@ The `PortRange` type exposes the single-range surface (parsing, `contains`,
 `overlaps`, `intersection`, `merge`, double-ended iteration). Enable the `serde`
 feature to derive `Serialize`/`Deserialize` on both types.
 
+Curated presets and TCP/UDP splits:
+
+```rust
+use portspec::{preset, top_100_tcp, Proto, TaggedSpec};
+
+// Curated, normalized list of the ports most worth a quick scan.
+let scan = top_100_tcp();
+assert!(scan.contains(443));
+
+// Same thing by name; supports "top-100", "top100", "top-1000", "top1000".
+assert_eq!(preset("top-100").unwrap(), scan);
+
+// nmap-style TCP/UDP split (default proto = TCP).
+let tagged: TaggedSpec = "T:22,80,443,U:53,123".parse().unwrap();
+assert_eq!(tagged.tcp.count(), 3);
+assert_eq!(tagged.udp.count(), 2);
+assert!(tagged.contains(Proto::Udp, 53));
+
+// Per-protocol set algebra — never crosses transports.
+let other: TaggedSpec = "T:80,U:53".parse().unwrap();
+let just_t22 = tagged.difference(&other);
+assert!(just_t22.contains(Proto::Tcp, 22));
+```
+
+`PortSpec::nth_port(index)` gives O(R) random access, and
+`services_for(port)` iterates every name registered to a port in the embedded
+table.
+
+From the CLI:
+
+```sh
+portspec --resolve 22,80,443                   # 22<TAB>ssh, ...
+portspec --preset top-100 --count              # 101
+portspec --tagged "T:22,80,U:53,123"           # tcp 22\ntcp 80\nudp 53\nudp 123
+```
+
 ## Design notes
 
 - **No networking.** This crate is pure port arithmetic; it never opens a socket
