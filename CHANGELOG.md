@@ -38,6 +38,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   never crosses transports.
 - `preset(name)` looks up a curated preset by case-insensitive name
   (`"top-100"`, `"top100"`, `"top-1000"`, `"top1000"`).
+- README sections covering presets, `TaggedSpec`, `--resolve`, `--tagged`,
+  `--preset`, and `services_for`.
+- Bench coverage for presets, `TaggedSpec` parsing, and `nth_port`.
 
 ## [0.2.0]
 
