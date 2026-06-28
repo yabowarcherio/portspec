@@ -80,6 +80,21 @@ fn for_proto_returns_matching_spec() {
 }
 
 #[test]
+fn iter_yields_tcp_then_udp_in_port_order() {
+    let t: TaggedSpec = "T:80,22,U:53,123".parse().unwrap();
+    let v: Vec<(Proto, u16)> = t.iter().collect();
+    assert_eq!(
+        v,
+        vec![
+            (Proto::Tcp, 22),
+            (Proto::Tcp, 80),
+            (Proto::Udp, 53),
+            (Proto::Udp, 123),
+        ]
+    );
+}
+
+#[test]
 fn union_combines_per_protocol() {
     let a: TaggedSpec = "T:22,U:53".parse().unwrap();
     let b: TaggedSpec = "T:80,U:123".parse().unwrap();
