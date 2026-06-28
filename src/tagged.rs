@@ -85,6 +85,15 @@ impl TaggedSpec {
             udp: self.udp.difference(&other.udp),
         }
     }
+
+    /// Iterate over every `(proto, port)` pair in the spec, TCP first then
+    /// UDP, each in ascending port order.
+    pub fn iter(&self) -> impl Iterator<Item = (Proto, u16)> + '_ {
+        self.tcp
+            .iter()
+            .map(|p| (Proto::Tcp, p))
+            .chain(self.udp.iter().map(|p| (Proto::Udp, p)))
+    }
 }
 
 impl FromStr for TaggedSpec {
