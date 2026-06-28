@@ -41,6 +41,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - README sections covering presets, `TaggedSpec`, `--resolve`, `--tagged`,
   `--preset`, and `services_for`.
 - Bench coverage for presets, `TaggedSpec` parsing, and `nth_port`.
+- `TaggedSpec::iter()` yields `(Proto, port)` pairs (TCP first then UDP,
+  each ascending). The `--tagged` CLI dispatch now uses it.
 
 ## [0.2.0]
 
