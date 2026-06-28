@@ -117,14 +117,10 @@ fn main() -> ExitCode {
     if cli.tagged {
         // Tagged mode: combine all input specs via TaggedSpec union, then
         // emit one `tcp PORT` / `udp PORT` line per port.
-        let mut tcp = PortSpec::new();
-        let mut udp = PortSpec::new();
+        let mut combined = portspec::TaggedSpec::new();
         for s in &specs {
             match portspec::TaggedSpec::from_str(s) {
-                Ok(t) => {
-                    tcp = tcp.union(&t.tcp);
-                    udp = udp.union(&t.udp);
-                }
+                Ok(t) => combined = combined.union(&t),
                 Err(e) => {
                     eprintln!("portspec: {s:?}: {e}");
                     return ExitCode::from(2);
@@ -133,13 +129,8 @@ fn main() -> ExitCode {
         }
         let stdout = io::stdout();
         let mut out = stdout.lock();
-        for p in tcp.iter() {
-            if writeln!(out, "tcp {p}").is_err() {
-                return ExitCode::SUCCESS;
-            }
-        }
-        for p in udp.iter() {
-            if writeln!(out, "udp {p}").is_err() {
+        for (proto, port) in combined.iter() {
+            if writeln!(out, "{proto} {port}").is_err() {
                 return ExitCode::SUCCESS;
             }
         }
