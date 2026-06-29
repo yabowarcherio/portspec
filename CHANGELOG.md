@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.0]
+
 ### Added
 
 - `Proto` enum (`Tcp` / `Udp`) with `as_str()` / `letter()` accessors and
