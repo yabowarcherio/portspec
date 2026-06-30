@@ -1,6 +1,6 @@
 //! Tests for the built-in port presets.
 
-use portspec::{top_100_tcp, top_1000_tcp, TOP_100_TCP_LIST, TOP_1000_TCP_LIST};
+use portspec::{top_1000_tcp, top_100_tcp, TOP_1000_TCP_LIST, TOP_100_TCP_LIST};
 
 #[test]
 fn presets_parse_cleanly() {
@@ -44,7 +44,7 @@ fn presets_normalize_and_dedup() {
 
 #[test]
 fn preset_lookup_accepts_case_and_dash_variants() {
-    use portspec::{preset, top_100_tcp, top_1000_tcp};
+    use portspec::{preset, top_1000_tcp, top_100_tcp};
     assert_eq!(preset("top-100").unwrap(), top_100_tcp());
     assert_eq!(preset("TOP100").unwrap(), top_100_tcp());
     assert_eq!(preset("Top-1000").unwrap(), top_1000_tcp());

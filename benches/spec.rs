@@ -30,7 +30,7 @@ fn bench_set_ops(c: &mut Criterion) {
 }
 
 fn bench_presets(c: &mut Criterion) {
-    use portspec::{top_100_tcp, top_1000_tcp};
+    use portspec::{top_1000_tcp, top_100_tcp};
     c.bench_function("top_100_tcp parse", |b| b.iter(top_100_tcp));
     c.bench_function("top_1000_tcp parse", |b| b.iter(top_1000_tcp));
     let small = top_100_tcp();

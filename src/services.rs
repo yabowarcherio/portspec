@@ -15,56 +15,206 @@ pub struct Service {
 
 /// The embedded service table, sorted by `name`.
 pub const SERVICES: &[Service] = &[
-    Service { name: "amqp", port: 5672 },
-    Service { name: "bgp", port: 179 },
-    Service { name: "cassandra", port: 9042 },
-    Service { name: "couchdb", port: 5984 },
-    Service { name: "dhcp-client", port: 68 },
-    Service { name: "dhcp-server", port: 67 },
-    Service { name: "dns", port: 53 },
-    Service { name: "elasticsearch", port: 9200 },
-    Service { name: "etcd", port: 2379 },
-    Service { name: "ftp", port: 21 },
-    Service { name: "ftp-data", port: 20 },
-    Service { name: "git", port: 9418 },
-    Service { name: "grpc", port: 50051 },
-    Service { name: "http", port: 80 },
-    Service { name: "https", port: 443 },
-    Service { name: "imap", port: 143 },
-    Service { name: "imaps", port: 993 },
-    Service { name: "ipp", port: 631 },
-    Service { name: "irc", port: 6667 },
-    Service { name: "kafka", port: 9092 },
-    Service { name: "ldap", port: 389 },
-    Service { name: "ldaps", port: 636 },
-    Service { name: "memcached", port: 11211 },
-    Service { name: "mongodb", port: 27017 },
-    Service { name: "mqtt", port: 1883 },
-    Service { name: "mssql", port: 1433 },
-    Service { name: "mysql", port: 3306 },
-    Service { name: "nats", port: 4222 },
-    Service { name: "netbios-ns", port: 137 },
-    Service { name: "netbios-ssn", port: 139 },
-    Service { name: "ntp", port: 123 },
-    Service { name: "pop3", port: 110 },
-    Service { name: "pop3s", port: 995 },
-    Service { name: "postgres", port: 5432 },
-    Service { name: "prometheus", port: 9090 },
-    Service { name: "rdp", port: 3389 },
-    Service { name: "redis", port: 6379 },
-    Service { name: "smb", port: 445 },
-    Service { name: "smtp", port: 25 },
-    Service { name: "smtps", port: 465 },
-    Service { name: "snmp", port: 161 },
-    Service { name: "ssh", port: 22 },
-    Service { name: "submission", port: 587 },
-    Service { name: "syslog", port: 514 },
-    Service { name: "telnet", port: 23 },
-    Service { name: "tftp", port: 69 },
-    Service { name: "vnc", port: 5900 },
-    Service { name: "winrm", port: 5985 },
-    Service { name: "winrm-https", port: 5986 },
-    Service { name: "zookeeper", port: 2181 },
+    Service {
+        name: "amqp",
+        port: 5672,
+    },
+    Service {
+        name: "bgp",
+        port: 179,
+    },
+    Service {
+        name: "cassandra",
+        port: 9042,
+    },
+    Service {
+        name: "couchdb",
+        port: 5984,
+    },
+    Service {
+        name: "dhcp-client",
+        port: 68,
+    },
+    Service {
+        name: "dhcp-server",
+        port: 67,
+    },
+    Service {
+        name: "dns",
+        port: 53,
+    },
+    Service {
+        name: "elasticsearch",
+        port: 9200,
+    },
+    Service {
+        name: "etcd",
+        port: 2379,
+    },
+    Service {
+        name: "ftp",
+        port: 21,
+    },
+    Service {
+        name: "ftp-data",
+        port: 20,
+    },
+    Service {
+        name: "git",
+        port: 9418,
+    },
+    Service {
+        name: "grpc",
+        port: 50051,
+    },
+    Service {
+        name: "http",
+        port: 80,
+    },
+    Service {
+        name: "https",
+        port: 443,
+    },
+    Service {
+        name: "imap",
+        port: 143,
+    },
+    Service {
+        name: "imaps",
+        port: 993,
+    },
+    Service {
+        name: "ipp",
+        port: 631,
+    },
+    Service {
+        name: "irc",
+        port: 6667,
+    },
+    Service {
+        name: "kafka",
+        port: 9092,
+    },
+    Service {
+        name: "ldap",
+        port: 389,
+    },
+    Service {
+        name: "ldaps",
+        port: 636,
+    },
+    Service {
+        name: "memcached",
+        port: 11211,
+    },
+    Service {
+        name: "mongodb",
+        port: 27017,
+    },
+    Service {
+        name: "mqtt",
+        port: 1883,
+    },
+    Service {
+        name: "mssql",
+        port: 1433,
+    },
+    Service {
+        name: "mysql",
+        port: 3306,
+    },
+    Service {
+        name: "nats",
+        port: 4222,
+    },
+    Service {
+        name: "netbios-ns",
+        port: 137,
+    },
+    Service {
+        name: "netbios-ssn",
+        port: 139,
+    },
+    Service {
+        name: "ntp",
+        port: 123,
+    },
+    Service {
+        name: "pop3",
+        port: 110,
+    },
+    Service {
+        name: "pop3s",
+        port: 995,
+    },
+    Service {
+        name: "postgres",
+        port: 5432,
+    },
+    Service {
+        name: "prometheus",
+        port: 9090,
+    },
+    Service {
+        name: "rdp",
+        port: 3389,
+    },
+    Service {
+        name: "redis",
+        port: 6379,
+    },
+    Service {
+        name: "smb",
+        port: 445,
+    },
+    Service {
+        name: "smtp",
+        port: 25,
+    },
+    Service {
+        name: "smtps",
+        port: 465,
+    },
+    Service {
+        name: "snmp",
+        port: 161,
+    },
+    Service {
+        name: "ssh",
+        port: 22,
+    },
+    Service {
+        name: "submission",
+        port: 587,
+    },
+    Service {
+        name: "syslog",
+        port: 514,
+    },
+    Service {
+        name: "telnet",
+        port: 23,
+    },
+    Service {
+        name: "tftp",
+        port: 69,
+    },
+    Service {
+        name: "vnc",
+        port: 5900,
+    },
+    Service {
+        name: "winrm",
+        port: 5985,
+    },
+    Service {
+        name: "winrm-https",
+        port: 5986,
+    },
+    Service {
+        name: "zookeeper",
+        port: 2181,
+    },
 ];
 
 /// Look up the port for a service by name. Match is case-insensitive.

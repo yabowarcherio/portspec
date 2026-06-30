@@ -143,9 +143,7 @@ fn main() -> ExitCode {
         match portspec::preset(name) {
             Ok(spec) => combined = spec,
             Err(_) => {
-                eprintln!(
-                    "portspec: unknown preset {name:?} (try top-100 / top-1000)"
-                );
+                eprintln!("portspec: unknown preset {name:?} (try top-100 / top-1000)");
                 return ExitCode::from(2);
             }
         }

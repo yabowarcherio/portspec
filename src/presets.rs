@@ -26,12 +26,16 @@ pub fn preset(name: &str) -> Result<PortSpec, ParseError> {
 /// Build cost is a single parse over the canonical list; cache the result if
 /// you call it repeatedly.
 pub fn top_100_tcp() -> PortSpec {
-    TOP_100_TCP_LIST.parse().expect("preset string is well-formed")
+    TOP_100_TCP_LIST
+        .parse()
+        .expect("preset string is well-formed")
 }
 
 /// Expanded "top-1000 TCP" preset, a strict superset of [`top_100_tcp`].
 pub fn top_1000_tcp() -> PortSpec {
-    TOP_1000_TCP_LIST.parse().expect("preset string is well-formed")
+    TOP_1000_TCP_LIST
+        .parse()
+        .expect("preset string is well-formed")
 }
 
 /// The compact canonical text form of the top-100 list.
@@ -90,7 +94,10 @@ mod tests {
     fn top_1000_contains_top_100() {
         let small = top_100_tcp();
         let big = top_1000_tcp();
-        assert!(small.is_subset_of(&big), "top_100 must be a subset of top_1000");
+        assert!(
+            small.is_subset_of(&big),
+            "top_100 must be a subset of top_1000"
+        );
     }
 
     #[test]

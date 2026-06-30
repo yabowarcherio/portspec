@@ -104,7 +104,10 @@ fn invert_flag() {
 
 #[test]
 fn tagged_flag_emits_proto_prefixed_lines() {
-    let out = bin().args(["--tagged", "T:22,80,U:53,123"]).output().unwrap();
+    let out = bin()
+        .args(["--tagged", "T:22,80,U:53,123"])
+        .output()
+        .unwrap();
     assert!(out.status.success());
     let s = String::from_utf8(out.stdout).unwrap();
     let lines: Vec<&str> = s.lines().collect();
@@ -127,7 +130,10 @@ fn tagged_flag_bad_spec_exits_two() {
 
 #[test]
 fn resolve_flag_appends_service_names() {
-    let out = bin().args(["--resolve", "22,80,443,9999"]).output().unwrap();
+    let out = bin()
+        .args(["--resolve", "22,80,443,9999"])
+        .output()
+        .unwrap();
     assert!(out.status.success());
     let s = String::from_utf8(out.stdout).unwrap();
     let lines: Vec<&str> = s.lines().collect();
@@ -140,10 +146,20 @@ fn resolve_flag_appends_service_names() {
 
 #[test]
 fn preset_top_100_replaces_input() {
-    let out = bin().args(["--preset", "top-100", "--count"]).output().unwrap();
+    let out = bin()
+        .args(["--preset", "top-100", "--count"])
+        .output()
+        .unwrap();
     assert!(out.status.success());
-    let n: u32 = String::from_utf8(out.stdout).unwrap().trim().parse().unwrap();
-    assert!((90..=170).contains(&n), "preset top-100 count out of band: {n}");
+    let n: u32 = String::from_utf8(out.stdout)
+        .unwrap()
+        .trim()
+        .parse()
+        .unwrap();
+    assert!(
+        (90..=170).contains(&n),
+        "preset top-100 count out of band: {n}"
+    );
 }
 
 #[test]
@@ -156,8 +172,16 @@ fn preset_top_1000_is_larger_than_top_100() {
         .args(["--preset", "top-1000", "--count"])
         .output()
         .unwrap();
-    let s: u32 = String::from_utf8(small.stdout).unwrap().trim().parse().unwrap();
-    let b: u32 = String::from_utf8(big.stdout).unwrap().trim().parse().unwrap();
+    let s: u32 = String::from_utf8(small.stdout)
+        .unwrap()
+        .trim()
+        .parse()
+        .unwrap();
+    let b: u32 = String::from_utf8(big.stdout)
+        .unwrap()
+        .trim()
+        .parse()
+        .unwrap();
     assert!(b > s);
 }
 
